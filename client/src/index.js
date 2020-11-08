@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Route, Switch, Redirect, BrowserRouter } from 'react-router-dom';
-import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 import configureStore from './helpers/store/store';

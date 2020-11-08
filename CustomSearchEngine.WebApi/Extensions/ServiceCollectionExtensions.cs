@@ -24,6 +24,21 @@ namespace CustomSearchEngine.WebApi.Extensions
             service.AddMemoryCache();
         }
 
+        public static void SetupCors(this IServiceCollection services)
+        {
+            services.AddCors(
+                options =>
+                    {
+                        options.AddDefaultPolicy(
+                            builder =>
+                                {
+                                    builder.AllowAnyHeader()
+                                           .AllowAnyMethod()
+                                           .AllowAnyOrigin();
+                                });
+                    });
+        }
+
         #endregion
     }
 }

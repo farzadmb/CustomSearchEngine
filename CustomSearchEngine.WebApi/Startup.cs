@@ -21,6 +21,7 @@ namespace CustomSearchEngine.WebApi
         {
             services.SetupDependencyInjection();
             services.SetupServices();
+            services.SetupCors();
 
             services.AddControllers();
         }
@@ -36,6 +37,7 @@ namespace CustomSearchEngine.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors();
 
             app.UseAuthorization();
 

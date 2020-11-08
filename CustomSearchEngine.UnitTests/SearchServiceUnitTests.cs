@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CustomSearchEngine.Application;
 using CustomSearchEngine.Application.Exceptions;
+using CustomSearchEngine.Application.Handlers;
 using CustomSearchEngine.Application.Models.Requests;
 using CustomSearchEngine.Application.Models.Responses;
 using CustomSearchEngine.Proxy.SearchHandler;
@@ -24,7 +25,9 @@ namespace CustomSearchEngine.UnitTests
             CheckWebsiteStatusResponse response,
             Type exceptionType)
         {
-            var searchService = new SearchService(searchEngineHandlers);
+            var cacheHandler = new Mock<ICacheHandler>();
+
+            var searchService = new SearchService(searchEngineHandlers, cacheHandler.Object);
 
             if (exceptionType == null)
             {
