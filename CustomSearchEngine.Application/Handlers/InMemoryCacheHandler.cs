@@ -1,8 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CustomSearchEngine.Application.Handlers
 {

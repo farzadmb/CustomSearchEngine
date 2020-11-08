@@ -35,6 +35,7 @@ namespace CustomSearchEngine.Application
         public async Task<CheckWebsiteStatusResponse> CheckWebsiteStatusAsync(CheckWebsiteStatusRequest request)
         {
             var key = $"{request.SearchEngine}_{request.Query}_{request.Link}";
+
             var cachedResponse = cacheHandler.GetCacheObject<CheckWebsiteStatusResponse>(key);
 
             if (cachedResponse != null)

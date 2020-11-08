@@ -3,7 +3,7 @@ import React from 'react';
 import { Select } from './styled';
 
 const EngineSelector = (props) => {
-    const { options, disabled } = props;
+    const { options, value, disabled, onChange } = props;
 
     let listOptions = [];
     let isDisabled = true;
@@ -15,9 +15,8 @@ const EngineSelector = (props) => {
 
     const isDropdownDisabled = isDisabled ? { disabled: 'disabled' } : {};
 
-
     return (
-        <Select {...isDropdownDisabled}>{listOptions}</Select>
+        <Select {...isDropdownDisabled} value={value} onChange={onChange}>{listOptions}</Select>
     );
 }
 
