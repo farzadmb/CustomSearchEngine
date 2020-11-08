@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CustomSearchEngine.Proxy.Exceptions;
 using CustomSearchEngine.Proxy.RequestHandler;
 
 using HtmlAgilityPack;
@@ -50,13 +51,23 @@ namespace CustomSearchEngine.Proxy.SearchHandler
 
             var pages = await Task.WhenAll(tasks);
 
-            var links = pages.SelectMany(
-                p => p.DocumentNode
-                      .SelectNodes("//div[@class='kCrYT']")
-                      .Descendants("a")
-                      .Select(n => n.Attributes["href"].Value.Substring(7)));
+            try
+            {
+                // This part is added considering the current response from Google.
+                // This is not the best solution and we need to find a better way to
+                // parse the nodes and select the links
+                var links = pages.SelectMany(
+                    p => p.DocumentNode
+                          .SelectNodes("//div[@class='kCrYT']")
+                          .Descendants("a")
+                          .Select(n => n.Attributes["href"].Value.Substring(7)));
 
-            return links;
+                return links;
+            }
+            catch (Exception ex)
+            {
+                throw new ParsingNodesExceptions(ex.Message);
+            }
         }
 
         #endregion

@@ -23,7 +23,7 @@ namespace CustomSearchEngine.Proxy.RequestHandler
 
         public WebClientHandler()
         {
-            this.webClient = new WebClient();
+            webClient = new WebClient();
         }
 
         #endregion

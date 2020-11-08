@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CustomSearchEngine.Application\CustomSearchEngine.Application.csproj" />
     <ProjectReference Include="..\CustomSearchEngine.Proxy\CustomSearchEngine.Proxy.csproj" />
   </ItemGroup>
 
