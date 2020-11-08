@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
 using CustomSearchEngine.Application.Exceptions;
 using CustomSearchEngine.Application.Models.Requests;
 using CustomSearchEngine.Application.Models.Responses;
@@ -32,7 +30,12 @@ namespace CustomSearchEngine.Application
 
         public async Task<CheckWebsiteStatusResponse> CheckWebsiteStatusAsync(CheckWebsiteStatusRequest request)
         {
-            var searchEngine = SelectSearchEngineHandler(request.SearchEngine);
+            if (!Enum.TryParse<SearchEngineType>(request.SearchEngine, true, out var engineType))
+            {
+                throw new SearchEngineHandlerNotFound(request.SearchEngine);
+            }
+
+            var searchEngine = SelectSearchEngineHandler(engineType);
 
             var links = (await searchEngine.SelectLinksAsync(request.Query, request.Count)).ToList();
 
@@ -58,7 +61,7 @@ namespace CustomSearchEngine.Application
 
             if (searchEngine == null)
             {
-                throw new SearchEngineHandlerNotFound(engineType);
+                throw new SearchEngineHandlerNotFound(engineType.ToString());
             }
 
             return searchEngine;

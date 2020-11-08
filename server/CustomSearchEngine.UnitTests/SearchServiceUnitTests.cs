@@ -59,7 +59,7 @@ namespace CustomSearchEngine.UnitTests
                                          Count = 10,
                                          Link = "l2",
                                          Query = "search",
-                                         SearchEngine = SearchEngineType.Bing
+                                         SearchEngine = SearchEngineType.Bing.ToString()
                                      },
                                  null, typeof(SearchEngineHandlerNotFound)
                              };
@@ -72,7 +72,7 @@ namespace CustomSearchEngine.UnitTests
                                          Count = 10,
                                          Link = "l2",
                                          Query = "search",
-                                         SearchEngine = SearchEngineType.Google
+                                         SearchEngine = SearchEngineType.Google.ToString()
                                      },
                                  new CheckWebsiteStatusResponse() { Positions = new List<int>() { 2 } }, null
                              };

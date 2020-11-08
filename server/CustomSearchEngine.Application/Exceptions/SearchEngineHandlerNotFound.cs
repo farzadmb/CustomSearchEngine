@@ -7,7 +7,7 @@ namespace CustomSearchEngine.Application.Exceptions
     {
         #region Constructor
 
-        public SearchEngineHandlerNotFound(SearchEngineType engineType) : base($"Search engine handler for {engineType} is not found")
+        public SearchEngineHandlerNotFound(string engineType) : base($"Search engine handler for {engineType} is not found")
         {
         }
 

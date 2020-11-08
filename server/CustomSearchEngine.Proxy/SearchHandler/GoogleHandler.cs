@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
 using CustomSearchEngine.Proxy.Exceptions;
 using CustomSearchEngine.Proxy.RequestHandler;
-
-using HtmlAgilityPack;
 
 namespace CustomSearchEngine.Proxy.SearchHandler
 {
@@ -47,7 +43,7 @@ namespace CustomSearchEngine.Proxy.SearchHandler
                                                {
                                                    { "q", query }, { "start", ((p * 10) + 1).ToString() }
                                                })
-                                  .Select(c => webRequestHandler.GetHtmlPageAsync(BaseUrl, c));
+                                  .Select(c => webRequestHandler.GetHtmlPageAsync(BaseUrl, c)).ToList();
 
             var pages = await Task.WhenAll(tasks);
 

@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using CustomSearchEngine.WebApi.Extensions;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +28,8 @@ namespace CustomSearchEngine.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.SetupDependencyInjection();
+            services.AddSwaggerGen();
             services.AddControllers();
         }
 
@@ -46,6 +51,9 @@ namespace CustomSearchEngine.WebApi
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Custom Search Engine"); });
         }
     }
 }

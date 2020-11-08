@@ -8,7 +8,7 @@ namespace CustomSearchEngine.Application.Models.Requests
     {
         #region Properties
 
-        public SearchEngineType SearchEngine { get; set; } = SearchEngineType.Google;
+        public string SearchEngine { get; set; } = SearchEngineType.Google.ToString();
         
         [Range(1, Int32.MaxValue, ErrorMessage = "The number of links to check must be a positive number")]
         public int Count { get; set; } = 100;

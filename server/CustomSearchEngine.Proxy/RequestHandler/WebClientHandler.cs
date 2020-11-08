@@ -13,25 +13,11 @@ namespace CustomSearchEngine.Proxy.RequestHandler
 {
     public class WebClientHandler : IWebRequestHandler
     {
-        #region Fields
-
-        private readonly WebClient webClient;
-
-        #endregion
-
-        #region Constructor
-
-        public WebClientHandler()
-        {
-            webClient = new WebClient();
-        }
-
-        #endregion
-
         #region Get Data
 
         public async Task<HtmlDocument> GetHtmlPageAsync(string url, NameValueCollection parameters)
         {
+            var webClient = new WebClient();
             webClient.QueryString.Add(parameters);
 
             try
