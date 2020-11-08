@@ -1,4 +1,5 @@
 ﻿using CustomSearchEngine.Application;
+using CustomSearchEngine.Application.Handlers;
 using CustomSearchEngine.Proxy.RequestHandler;
 using CustomSearchEngine.Proxy.SearchHandler;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,11 +12,16 @@ namespace CustomSearchEngine.WebApi.Extensions
 
         public static void SetupDependencyInjection(this IServiceCollection service)
         {
-            service.AddTransient<IWebRequestHandler, WebClientHandler>();
-
+            service.AddSingleton<IWebRequestHandler, WebClientHandler>();
             service.AddScoped<ISearchEngineHandler, GoogleHandler>();
-
             service.AddScoped<ISearchService, SearchService>();
+            service.AddSingleton<ICacheHandler, InMemoryCacheHandler>();
+        }
+
+        public static void SetupServices(this IServiceCollection service)
+        {
+            service.AddSwaggerGen();
+            service.AddMemoryCache();
         }
 
         #endregion

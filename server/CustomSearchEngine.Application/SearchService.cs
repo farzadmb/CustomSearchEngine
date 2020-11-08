@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CustomSearchEngine.Application.Exceptions;
+using CustomSearchEngine.Application.Handlers;
 using CustomSearchEngine.Application.Models.Requests;
 using CustomSearchEngine.Application.Models.Responses;
 using CustomSearchEngine.Proxy.SearchHandler;
@@ -15,13 +16,16 @@ namespace CustomSearchEngine.Application
 
         private readonly IEnumerable<ISearchEngineHandler> searchEngineHandlers;
 
+        private readonly ICacheHandler cacheHandler;
+
         #endregion
 
         #region Constructor
 
-        public SearchService(IEnumerable<ISearchEngineHandler> searchEngineHandlers)
+        public SearchService(IEnumerable<ISearchEngineHandler> searchEngineHandlers, ICacheHandler cacheHandler)
         {
             this.searchEngineHandlers = searchEngineHandlers;
+            this.cacheHandler = cacheHandler;
         }
 
         #endregion
@@ -30,6 +34,14 @@ namespace CustomSearchEngine.Application
 
         public async Task<CheckWebsiteStatusResponse> CheckWebsiteStatusAsync(CheckWebsiteStatusRequest request)
         {
+            var key = $"{request.SearchEngine}_{request.Query}_{request.Link}";
+            var cachedResponse = cacheHandler.GetCacheObject<CheckWebsiteStatusResponse>(key);
+
+            if (cachedResponse != null)
+            {
+                return cachedResponse;
+            }
+
             if (!Enum.TryParse<SearchEngineType>(request.SearchEngine, true, out var engineType))
             {
                 throw new SearchEngineHandlerNotFound(request.SearchEngine);
@@ -48,7 +60,10 @@ namespace CustomSearchEngine.Application
                 }
             }
 
-            return new CheckWebsiteStatusResponse() { Positions = positions };
+            var response = new CheckWebsiteStatusResponse() { Positions = positions };
+            cacheHandler.SetCacheObject(key, response);
+
+            return response;
         }
 
         #endregion
