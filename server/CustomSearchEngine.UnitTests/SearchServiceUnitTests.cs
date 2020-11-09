@@ -33,11 +33,48 @@ namespace CustomSearchEngine.UnitTests
             {
                 var result = await searchService.CheckWebsiteStatusAsync(request);
 
-                Assert.Equal(response.Positions.Count(), result.Positions.Count());
+                Assert.Equal(response.ResultItems.Count(), result.ResultItems.Count());
             }
             else
             {
                 await Assert.ThrowsAsync(exceptionType, () => searchService.CheckWebsiteStatusAsync(request));
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(CheckWebsiteStatusCachingAsyncUnitTestDataGenerator))]
+        public async Task CheckWebsiteStatusCachingAsyncUnitTest(
+            Mock<ISearchEngineHandler> searchEngineHandler,
+            Mock<ICacheHandler> cacheHandler,
+            CheckWebsiteStatusRequest request,
+            bool isCached)
+        {
+            searchEngineHandler.Invocations.Clear();
+            cacheHandler.Invocations.Clear();
+
+            var searchService = new SearchService(
+                new List<ISearchEngineHandler>() { searchEngineHandler.Object },
+                cacheHandler.Object);
+
+            await searchService.CheckWebsiteStatusAsync(request);
+
+            cacheHandler.Verify(ch => ch.GetCacheObject<CheckWebsiteStatusResponse>(It.IsAny<string>()), Times.Once);
+
+            if (isCached)
+            {
+                searchEngineHandler.Verify(h => h.SelectLinksAsync(It.IsAny<string>(), It.IsAny<int>()), Times.Never);
+
+                cacheHandler.Verify(
+                    ch => ch.SetCacheObject(It.IsAny<string>(), It.IsAny<CheckWebsiteStatusResponse>()),
+                    Times.Never);
+            }
+            else
+            {
+                searchEngineHandler.Verify(h => h.SelectLinksAsync(It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+
+                cacheHandler.Verify(
+                    ch => ch.SetCacheObject(It.IsAny<string>(), It.IsAny<CheckWebsiteStatusResponse>()),
+                    Times.Once);
             }
         }
 
@@ -52,11 +89,11 @@ namespace CustomSearchEngine.UnitTests
             handler.Setup(h => h.SelectLinksAsync(It.IsAny<string>(), It.IsAny<int>())).Returns(
                 Task.FromResult((new List<string>() { "L1", "L2", "L3" }).AsEnumerable()));
 
-            var handlers = new List<ISearchEngineHandler>() { handler.Object };
+            var searchEngineHandler = new List<ISearchEngineHandler>() { handler.Object };
 
             yield return new object[]
                              {
-                                 handlers,
+                                 searchEngineHandler,
                                  new CheckWebsiteStatusRequest()
                                      {
                                          Count = 10,
@@ -69,7 +106,7 @@ namespace CustomSearchEngine.UnitTests
 
             yield return new object[]
                              {
-                                 handlers,
+                                 searchEngineHandler,
                                  new CheckWebsiteStatusRequest()
                                      {
                                          Count = 10,
@@ -77,10 +114,41 @@ namespace CustomSearchEngine.UnitTests
                                          Query = "search",
                                          SearchEngine = SearchEngineType.Google.ToString()
                                      },
-                                 new CheckWebsiteStatusResponse() { Positions = new List<int>() { 2 } }, null
+                                 new CheckWebsiteStatusResponse()
+                                     {
+                                         ResultItems =
+                                             new List<SearchResultItem>() { new SearchResultItem() { Position = 2 } }
+                                     },
+                                 null
                              };
         }
+        
+        public static IEnumerable<object[]> CheckWebsiteStatusCachingAsyncUnitTestDataGenerator()
+        {
+            var request = new CheckWebsiteStatusRequest()
+                              {
+                                  Count = 10,
+                                  Link = "l2",
+                                  Query = "search",
+                                  SearchEngine = SearchEngineType.Google.ToString()
+                              };
 
+            var searchEngineHandler = new Mock<ISearchEngineHandler>();
+            searchEngineHandler.Setup(h => h.EngineType).Returns(SearchEngineType.Google);
+            searchEngineHandler.Setup(h => h.SelectLinksAsync(It.IsAny<string>(), It.IsAny<int>())).Returns(
+                Task.FromResult((new List<string>() { "L1", "L2", "L3" }).AsEnumerable()));
+
+            var cacheHandler = new Mock<ICacheHandler>();
+            cacheHandler.Setup(ch => ch.GetCacheObject<CheckWebsiteStatusResponse>(It.IsAny<string>()))
+                        .Returns((CheckWebsiteStatusResponse) null);
+
+            yield return new object[] { searchEngineHandler, cacheHandler, request, false };
+
+            cacheHandler = new Mock<ICacheHandler>();
+            cacheHandler.Setup(ch => ch.GetCacheObject<CheckWebsiteStatusResponse>(It.IsAny<string>()))
+                        .Returns(new CheckWebsiteStatusResponse());
+            yield return new object[] { searchEngineHandler, cacheHandler, request, true };
+        }
         #endregion
     }
 }

@@ -8,7 +8,7 @@ namespace CustomSearchEngine.Application.Models.Responses
     {
         #region Properties
 
-        public IEnumerable<int> Positions { get; set; }
+        public IEnumerable<SearchResultItem> ResultItems { get; set; }
 
         #endregion
     }

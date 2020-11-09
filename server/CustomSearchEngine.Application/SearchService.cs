@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CustomSearchEngine.Application.Exceptions;
+using CustomSearchEngine.Application.Extensions;
 using CustomSearchEngine.Application.Handlers;
 using CustomSearchEngine.Application.Models.Requests;
 using CustomSearchEngine.Application.Models.Responses;
@@ -34,7 +35,7 @@ namespace CustomSearchEngine.Application
 
         public async Task<CheckWebsiteStatusResponse> CheckWebsiteStatusAsync(CheckWebsiteStatusRequest request)
         {
-            var key = $"{request.SearchEngine}_{request.Query}_{request.Link}";
+            var key = request.GenerateCacheKey();
 
             var cachedResponse = cacheHandler.GetCacheObject<CheckWebsiteStatusResponse>(key);
 
@@ -52,16 +53,16 @@ namespace CustomSearchEngine.Application
 
             var links = (await searchEngine.SelectLinksAsync(request.Query, request.Count)).ToList();
 
-            var positions = new List<int>();
+            var resultItems = new List<SearchResultItem>();
             for (var i = 0; i < links.Count; i++)
             {
                 if (links[i].Contains(request.Link, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    positions.Add(i + 1);
+                    resultItems.Add(new SearchResultItem() { Position = i + 1 });
                 }
             }
 
-            var response = new CheckWebsiteStatusResponse() { Positions = positions };
+            var response = new CheckWebsiteStatusResponse() { ResultItems = resultItems };
             cacheHandler.SetCacheObject(key, response);
 
             return response;
