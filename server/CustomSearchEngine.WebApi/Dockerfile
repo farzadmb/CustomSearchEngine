@@ -7,9 +7,9 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["CustomSearchEngine.WebApi/CustomSearchEngine.WebApi.csproj", "CustomSearchEngine.WebApi/"]
+COPY ["server/CustomSearchEngine.WebApi/CustomSearchEngine.WebApi.csproj", "CustomSearchEngine.WebApi/"]
 RUN dotnet restore "CustomSearchEngine.WebApi/CustomSearchEngine.WebApi.csproj"
-COPY . .
+COPY server/ .
 WORKDIR "/src/CustomSearchEngine.WebApi"
 RUN dotnet build "CustomSearchEngine.WebApi.csproj" -c Release -o /app/build
 

@@ -2,10 +2,10 @@ version: '3.4'
 
 services:
   server:
-    image: customsearchengineapi
+    image: cse-api
     build:
       context: .
-      dockerfile: CustomSearchEngine.WebApi/Dockerfile
+      dockerfile: server/CustomSearchEngine.WebApi/Dockerfile
     ports:
       - "8090:80"
       - "8091:443"
