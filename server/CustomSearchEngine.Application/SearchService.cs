@@ -51,7 +51,7 @@ namespace CustomSearchEngine.Application
 
             var searchEngine = SelectSearchEngineHandler(engineType);
 
-            var links = (await searchEngine.SelectLinksAsync(request.Query, request.Count)).ToList();
+            var links = (await searchEngine.SelectLinksAsync(request.Query, request.Count)).Take(request.Count).ToList();
 
             var resultItems = new List<SearchResultItem>();
             for (var i = 0; i < links.Count; i++)

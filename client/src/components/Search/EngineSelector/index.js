@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Select } from './styled';
+import { Select, Option } from './styled';
 
 const EngineSelector = (props) => {
     const { options, value, disabled, onChange } = props;
@@ -9,7 +9,7 @@ const EngineSelector = (props) => {
     let isDisabled = true;
 
     if (options) {
-        listOptions = options.map(o => <option key={o} value={o}>{o}</option>);
+        listOptions = options.map(o => <Option key={o} value={o}>{o}</Option>);
         isDisabled = disabled;
     }
 

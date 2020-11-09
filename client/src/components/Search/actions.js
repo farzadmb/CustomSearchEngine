@@ -9,7 +9,7 @@ const getLinkStatus = ({ engine, query, link }) => (
         dispatch({ type: actionTypes.GET_LINK_STATUS_REQUEST });
 
         axios.post(`${baseUrl}/search/checkLinkStatus`, { searchEngine: engine, query, link }).then(response => {
-            dispatch({ type: actionTypes.GET_LINK_STATUS_SUCCESS, status: response.data });
+            dispatch({ type: actionTypes.GET_LINK_STATUS_SUCCESS, searchResult: response.data });
         }).catch(error => {
             dispatch({ type: actionTypes.GET_LINK_STATUS_FAILED, error });
         });

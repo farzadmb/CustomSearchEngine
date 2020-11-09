@@ -12,4 +12,17 @@ const Separator = styled.div`
     align-items: center;    
     display: inline-block;
 `;
-export { Box, Separator };
+
+const Header = styled.div`
+    height: 120px;
+    vertical-align: middle;
+    position: relative;
+`;
+
+const Logo = styled.img`
+    height: 60px;
+    position: relative;
+    top: 20%
+`;
+
+export { Box, Separator, Header, Logo };

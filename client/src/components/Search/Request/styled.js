@@ -21,12 +21,16 @@ const Input = styled.input`
 const Button = styled.button`
     background: DarkCyan;
     color: white;
-    border-radius: 3px;
-    border: 2px solid DarkCyan;
-    margin: 0.5em 1em;
+    border-radius: 5px;
+    border: 1px solid CadetBlue;
     padding: 0.25em 1em 0.25em 1em;    
-    height: 30px;
-    width: 15%;
+    height: 35px;
+    width: 17%;
+    
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
 `;
 
 export { Border, Input, Button };
