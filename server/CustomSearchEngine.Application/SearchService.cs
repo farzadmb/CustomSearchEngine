@@ -49,9 +49,9 @@ namespace CustomSearchEngine.Application
                 throw new SearchEngineHandlerNotFound(request.SearchEngine);
             }
 
-            var searchEngine = SelectSearchEngineHandler(engineType);
+            var searchEngine = searchEngineHandlers.Select(engineType);
 
-            var links = (await searchEngine.SelectLinksAsync(request.Query, request.Count)).Take(request.Count).ToList();
+            var links = (await searchEngine.SelectLinksAsync(request.Query, request.Count)).ToList();
 
             var resultItems = new List<SearchResultItem>();
             for (var i = 0; i < links.Count; i++)
@@ -66,22 +66,6 @@ namespace CustomSearchEngine.Application
             cacheHandler.SetCacheObject(key, response);
 
             return response;
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private ISearchEngineHandler SelectSearchEngineHandler(SearchEngineType engineType)
-        {
-            var searchEngine = searchEngineHandlers.SingleOrDefault(seh => seh.EngineType == engineType);
-
-            if (searchEngine == null)
-            {
-                throw new SearchEngineHandlerNotFound(engineType.ToString());
-            }
-
-            return searchEngine;
         }
 
         #endregion

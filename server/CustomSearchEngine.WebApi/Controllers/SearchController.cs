@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CustomSearchEngine.Application;
 using CustomSearchEngine.Application.Exceptions;
 using CustomSearchEngine.Application.Models.Requests;
-using CustomSearchEngine.Application.Models.Responses;
-using CustomSearchEngine.Proxy.SearchHandler;
-
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CustomSearchEngine.WebApi.Controllers

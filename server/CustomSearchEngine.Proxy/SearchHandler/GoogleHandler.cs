@@ -14,8 +14,10 @@ namespace CustomSearchEngine.Proxy.SearchHandler
 
         private const string BaseUrl = "http://www.google.com/search";
 
-        private readonly IWebRequestHandler webRequestHandler;
+        private const int LinksPerPage = 10;
 
+        private readonly IWebRequestHandler webRequestHandler;
+        
         #endregion
         
         #region Properties
@@ -37,11 +39,11 @@ namespace CustomSearchEngine.Proxy.SearchHandler
 
         public async Task<IEnumerable<string>> SelectLinksAsync(string query, int count)
         {
-            var tasks = Enumerable.Range(0, count / 10)
+            var tasks = Enumerable.Range(0, count / LinksPerPage)
                                   .Select(
                                       p => new NameValueCollection
                                                {
-                                                   { "q", query }, { "start", ((p * 10) + 1).ToString() }
+                                                   { "q", query }, { "start", ((p * LinksPerPage) + 1).ToString() }
                                                })
                                   .Select(c => webRequestHandler.GetHtmlPageAsync(BaseUrl, c)).ToList();
 
@@ -56,6 +58,7 @@ namespace CustomSearchEngine.Proxy.SearchHandler
                     p => p.DocumentNode
                           .SelectNodes("//div[@class='kCrYT']")
                           .Descendants("a")
+                          .Take(count)
                           .Select(n => n.Attributes["href"].Value.Substring(7)));
 
                 return links;
