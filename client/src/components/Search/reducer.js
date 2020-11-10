@@ -6,11 +6,11 @@ const initialState = {
     error: null
 };
 
-const getLinkStatusRequest = (state) => ({ ...state, isLoading: true });
+const getLinkStatusRequest = (state) => ({ ...state, isLoading: true, error: null });
 
 const getLinkStatusSuccess = (state, searchResult) => ({ ...state, searchResult, isLoading: false, error: null });
 
-const getLinkStatusFailed = (state, error) => ({ ...state, isLoading: false, error });
+const getLinkStatusFailed = (state, error) => ({ ...state, searchResult: null, isLoading: false, error });
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
